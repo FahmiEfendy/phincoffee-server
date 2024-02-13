@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const Boom = require("boom");
+const { Op } = require("sequelize");
 
 const db = require("../../models");
 const generalHelper = require("../helpers/generalHelper");
@@ -42,6 +43,33 @@ const postCreateCategory = async (objectData) => {
   }
 };
 
+const getCategoryList = async (query) => {
+  try {
+    const data = await db.Categories.findAll(
+      query.name
+        ? {
+            where: { name: { [Op.like]: `%${query.name}%` } },
+          }
+        : {}
+    );
+
+    if (_.isEmpty(data)) {
+      throw Boom.notFound(`Cannot find category with query of ${query.name}`);
+    }
+
+    console.log([fileName, "GET All Category", "INFO"]);
+
+    return Promise.resolve(data);
+  } catch (err) {
+    console.log([fileName, "GET All Category", "ERROR"], {
+      message: { info: `${err}` },
+    });
+
+    return Promise.reject(generalHelper.errorResponse(err));
+  }
+};
+
 module.exports = {
   postCreateCategory,
+  getCategoryList,
 };

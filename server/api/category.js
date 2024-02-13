@@ -22,6 +22,19 @@ const createCategory = async (req, res) => {
   }
 };
 
+const categoryList = async (req, res) => {
+  try {
+    const response = await categoryHelper.getCategoryList(req.query);
+
+    res
+      .status(200)
+      .send({ message: "Successfully Get All Category", data: response });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 Router.post("/create", createCategory);
+Router.get("/list", categoryList);
 
 module.exports = Router;
