@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 const express = require("express");
 
+const category = require("./server/api/category");
+
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,8 @@ app.use("/api/product", productRoute);
 app.get("/api", (req, res) => {
   res.send("Hello!");
 });
+
+app.use("/api/category/", category);
 
 app.listen(port, () => {
   console.log(`Successfully connected to port ${port}`);
