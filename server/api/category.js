@@ -70,9 +70,22 @@ const updateCategory = async (req, res) => {
   }
 };
 
+const deleteCategory = async (req, res) => {
+  try {
+    validationHelper.categoryIdValidation(req.params);
+
+    await categoryHelper.deleteCategory(req.params);
+
+    res.status(200).send({ message: "Successfully Delete a Category" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 Router.post("/create", createCategory);
 Router.get("/list", categoryList);
 Router.get("/detail/:id", categoryDetail);
 Router.patch("/update/:id", updateCategory);
+Router.delete("/delete/:id", deleteCategory);
 
 module.exports = Router;

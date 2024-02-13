@@ -95,7 +95,7 @@ const patchUpdateCategory = async (params, objectData) => {
   const { description } = objectData;
 
   try {
-    // TODO: Validation Only Admin Can Create Category
+    // TODO: Validation Only Admin Can Update Category
 
     const selectedCategory = await db.Categories.findOne({
       where: { id: params.id },
@@ -122,9 +122,36 @@ const patchUpdateCategory = async (params, objectData) => {
   }
 };
 
+const deleteCategory = async (params) => {
+  try {
+    // TODO: Validation Only Admin Can Delete Category
+
+    const selectedCategory = await db.Categories.findOne({
+      where: { id: params.id },
+    });
+
+    if (_.isEmpty(selectedCategory)) {
+      throw Boom.notFound(`Cannot find category with id of ${params.id}`);
+    }
+
+    await db.Categories.destroy({ where: { id: params.id } });
+
+    console.log([fileName, "DELETE Category ", "INFO"]);
+
+    return;
+  } catch (err) {
+    console.log([fileName, "DELETE Category ", "ERROR"], {
+      message: { info: `${err}` },
+    });
+
+    return Promise.reject(generalHelper.errorResponse(err));
+  }
+};
+
 module.exports = {
   postCreateCategory,
   getCategoryList,
   getCategoryDetail,
   patchUpdateCategory,
+  deleteCategory,
 };
