@@ -1,9 +1,11 @@
 const Joi = require("joi");
 const Boom = require("boom");
 
-const createCategoryValidation = (data) => {
+const categoryRequestValidation = (data, isUpdate = false) => {
   const schema = Joi.object({
-    name: Joi.string().required().description("Category name, i.e. Coffee"),
+    name:
+      !isUpdate &&
+      Joi.string().required().description("Category name, i.e. Coffee"),
     description: Joi.string()
       .required()
       .description("Category description, Various coffee beverages"),
@@ -25,6 +27,6 @@ const categoryIdValidation = (data) => {
 };
 
 module.exports = {
-  createCategoryValidation,
+  categoryRequestValidation,
   categoryIdValidation,
 };

@@ -91,8 +91,40 @@ const getCategoryDetail = async (params) => {
   }
 };
 
+const patchUpdateCategory = async (params, objectData) => {
+  const { description } = objectData;
+
+  try {
+    // TODO: Validation Only Admin Can Create Category
+
+    const selectedCategory = await db.Categories.findOne({
+      where: { id: params.id },
+    });
+
+    if (_.isEmpty(selectedCategory)) {
+      throw Boom.notFound(`Cannot find category with id of ${params.id}`);
+    }
+
+    selectedCategory.description = description || selectedCategory.description;
+
+    await selectedCategory.save({ fields: ["description"] });
+    await selectedCategory.reload();
+
+    console.log([fileName, "PATCH Update Category ", "INFO"]);
+
+    return Promise.resolve(selectedCategory);
+  } catch (err) {
+    console.log([fileName, "PATCH Update Category ", "ERROR"], {
+      message: { info: `${err}` },
+    });
+
+    return Promise.reject(generalHelper.errorResponse(err));
+  }
+};
+
 module.exports = {
   postCreateCategory,
   getCategoryList,
   getCategoryDetail,
+  patchUpdateCategory,
 };

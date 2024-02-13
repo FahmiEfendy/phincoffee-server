@@ -10,7 +10,7 @@ const createCategory = async (req, res) => {
       description: req.body.description,
     };
 
-    validationHelper.createCategoryValidation(objectData);
+    validationHelper.categoryRequestValidation(objectData);
 
     const response = await categoryHelper.postCreateCategory(objectData);
 
@@ -48,8 +48,31 @@ const categoryDetail = async (req, res) => {
   }
 };
 
+const updateCategory = async (req, res) => {
+  try {
+    const objectData = {
+      description: req.body.description,
+    };
+
+    validationHelper.categoryIdValidation(req.params);
+    validationHelper.categoryRequestValidation(objectData, true);
+
+    const response = await categoryHelper.patchUpdateCategory(
+      req.params,
+      objectData
+    );
+
+    res
+      .status(200)
+      .send({ message: "Successfully Update a Category", data: response });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 Router.post("/create", createCategory);
 Router.get("/list", categoryList);
 Router.get("/detail/:id", categoryDetail);
+Router.patch("/update/:id", updateCategory);
 
 module.exports = Router;
