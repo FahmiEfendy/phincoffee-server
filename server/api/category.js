@@ -34,7 +34,22 @@ const categoryList = async (req, res) => {
   }
 };
 
+const categoryDetail = async (req, res) => {
+  try {
+    validationHelper.categoryIdValidation(req.params);
+
+    const response = await categoryHelper.getCategoryDetail(req.params);
+
+    res
+      .status(200)
+      .send({ message: "Successfully Get a Category Detail", data: response });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 Router.post("/create", createCategory);
 Router.get("/list", categoryList);
+Router.get("/detail/:id", categoryDetail);
 
 module.exports = Router;

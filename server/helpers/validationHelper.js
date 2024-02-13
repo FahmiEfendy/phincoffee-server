@@ -14,6 +14,17 @@ const createCategoryValidation = (data) => {
   }
 };
 
+const categoryIdValidation = (data) => {
+  const schema = Joi.object({
+    id: Joi.string().required().description("Category id, i.e. milk-coffee"),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
 module.exports = {
   createCategoryValidation,
+  categoryIdValidation,
 };

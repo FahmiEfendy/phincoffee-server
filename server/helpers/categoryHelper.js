@@ -69,7 +69,30 @@ const getCategoryList = async (query) => {
   }
 };
 
+const getCategoryDetail = async (params) => {
+  try {
+    const data = await db.Categories.findOne({
+      where: { id: params.id },
+    });
+
+    if (_.isEmpty(data)) {
+      throw Boom.notFound(`Cannot find category with id of ${params.id}`);
+    }
+
+    console.log([fileName, "GET Category Detail", "INFO"]);
+
+    return Promise.resolve(data);
+  } catch (err) {
+    console.log([fileName, "GET Category Detail", "ERROR"], {
+      message: { info: `${err}` },
+    });
+
+    return Promise.reject(generalHelper.errorResponse(err));
+  }
+};
+
 module.exports = {
   postCreateCategory,
   getCategoryList,
+  getCategoryDetail,
 };
