@@ -46,7 +46,7 @@ const updateProduct = async (product, id) => {
       description: product?.description,
       price: product?.price,
       description: product?.description,
-      image_url: product?.description,
+      image_url: product.image_url && product.image_url,
       category_id: product?.category_id,
     },
     { where: { id } }

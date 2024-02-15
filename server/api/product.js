@@ -65,15 +65,29 @@ const createProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
+  let imageResult;
   try {
+    if (req?.fileValidationError)
+      throw Boom.badRequest(req.fileValidationError.message);
+
+    if (req.files?.image_url) {
+      imageResult = await uploadToCloudinary(req.files.image_url[0], "image");
+      if (!imageResult?.url) throw Boom.badImplementation(imageResult.error);
+    }
+
     Validation.productValidation(req.body);
 
-    await ProductHelper.updateProduct(req.body, req.params.id);
+    await ProductHelper.updateProduct(
+      { ...req.body, image_url: imageResult?.url },
+      req.params.id
+    );
 
     return res.status(200).json("Product successfully updated");
   } catch (err) {
     console.log(err);
-    return res.send(GeneralHelper.errorResponse(err));
+    return res
+      .status(GeneralHelper.statusResponse(err))
+      .send(GeneralHelper.errorResponse(err));
   }
 };
 
@@ -96,7 +110,11 @@ Router.post(
   uploadMedia.fields([{ name: "image_url", maxCount: 1 }]),
   createProduct
 );
-Router.put("/update/:id", updateProduct);
+Router.put(
+  "/update/:id",
+  uploadMedia.fields([{ name: "image_url", maxCount: 1 }]),
+  updateProduct
+);
 Router.delete("/delete/:id", deleteProduct);
 
 module.exports = Router;
