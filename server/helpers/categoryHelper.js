@@ -15,12 +15,12 @@ const postCreateCategory = async (objectData) => {
 
     const id = _.toLower(_.replace(name, " ", "-"));
 
-    const categoryExist = await db.Categories.findAll({
+    const categoryExist = await db.Categories.findOne({
       where: { id },
     });
 
     if (!_.isEmpty(categoryExist)) {
-      throw Boom.badData(`Category ${name} already exist!`);
+      throw Boom.badRequest(`Category ${name} already exist!`);
     }
 
     const newCategory = db.Categories.build({
@@ -53,8 +53,12 @@ const getCategoryList = async (query) => {
         : {}
     );
 
-    if (_.isEmpty(data)) {
+    if (query?.name && _.isEmpty(data)) {
       throw Boom.notFound(`Cannot find category with query of ${query.name}`);
+    }
+
+    if (_.isEmpty(data)) {
+      throw Boom.notFound(`No category found!`);
     }
 
     console.log([fileName, "GET All Category", "INFO"]);
@@ -105,14 +109,15 @@ const patchUpdateCategory = async (params, objectData) => {
       throw Boom.notFound(`Cannot find category with id of ${params.id}`);
     }
 
-    selectedCategory.description = description || selectedCategory.description;
+    await db.Categories.update({ description }, { where: { id: params.id } });
 
-    await selectedCategory.save({ fields: ["description"] });
-    await selectedCategory.reload();
+    const updatedCategory = await db.Categories.findOne({
+      where: { id: params.id },
+    });
 
     console.log([fileName, "PATCH Update Category ", "INFO"]);
 
-    return Promise.resolve(selectedCategory);
+    return Promise.resolve(updatedCategory);
   } catch (err) {
     console.log([fileName, "PATCH Update Category ", "ERROR"], {
       message: { info: `${err}` },

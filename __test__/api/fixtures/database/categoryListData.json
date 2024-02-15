@@ -1,0 +1,73 @@
+[
+    {
+      "id": "coffee",
+      "name": "Coffee",
+      "description": "Explore our wide range of coffee blends from around the world.",
+      "createdAt": "2024-02-15 09:00:00",
+      "updatedAt": "2024-02-15 09:00:00"
+    },
+    {
+      "id": "coffee-milk",
+      "name": "Coffee with Milk",
+      "description": "Indulge in the perfect blend of coffee and silky milk.",
+      "createdAt": "2024-02-15 09:05:00",
+      "updatedAt": "2024-02-15 09:05:00"
+    },
+    {
+      "id": "pastry",
+      "name": "Pastries",
+      "description": "Delight in our selection of freshly baked pastries.",
+      "createdAt": "2024-02-15 09:10:00",
+      "updatedAt": "2024-02-15 09:10:00"
+    },
+    {
+      "id": "cake",
+      "name": "Cakes",
+      "description": "Celebrate with our delicious assortment of cakes for every occasion.",
+      "createdAt": "2024-02-15 09:15:00",
+      "updatedAt": "2024-02-15 09:15:00"
+    },
+    {
+      "id": "cookies",
+      "name": "Cookies",
+      "description": "Satisfy your sweet cravings with our delightful cookie collection.",
+      "createdAt": "2024-02-15 09:20:00",
+      "updatedAt": "2024-02-15 09:20:00"
+    },
+    {
+      "id": "sandwiches",
+      "name": "Sandwiches",
+      "description": "Enjoy a variety of savory and satisfying sandwiches made with premium ingredients.",
+      "createdAt": "2024-02-15 09:25:00",
+      "updatedAt": "2024-02-15 09:25:00"
+    },
+    {
+      "id": "smoothies",
+      "name": "Smoothies",
+      "description": "Refresh yourself with our nourishing and delicious smoothie options.",
+      "createdAt": "2024-02-15 09:30:00",
+      "updatedAt": "2024-02-15 09:30:00"
+    },
+    {
+      "id": "tea",
+      "name": "Tea",
+      "description": "Experience the finest teas from around the world, brewed to perfection.",
+      "createdAt": "2024-02-15 09:35:00",
+      "updatedAt": "2024-02-15 09:35:00"
+    },
+    {
+      "id": "breakfast",
+      "name": "Breakfast",
+      "description": "Start your day right with our hearty and delicious breakfast options.",
+      "createdAt": "2024-02-15 09:40:00",
+      "updatedAt": "2024-02-15 09:40:00"
+    },
+    {
+      "id": "ice-cream",
+      "name": "Ice Cream",
+      "description": "Indulge in our creamy and delightful ice cream flavors.",
+      "createdAt": "2024-02-15 09:45:00",
+      "updatedAt": "2024-02-15 09:45:00"
+    }
+]
+  
