@@ -23,7 +23,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/api/category/", category);
-app.use("api/order", orderRoute);
+app.use("/api/order/", orderRoute);
 
 app.listen(port, () => {
   console.log(`Successfully connected to port ${port}`);

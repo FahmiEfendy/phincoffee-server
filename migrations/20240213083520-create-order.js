@@ -26,6 +26,9 @@ module.exports = {
           key: "id",
         },
       },
+      product_name: {
+        type: Sequelize.STRING
+      },
       quantity: {
         type: Sequelize.INTEGER
       },

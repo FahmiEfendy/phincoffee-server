@@ -17,9 +17,31 @@ const createOrder = async (req, res) => {
         console.log(err);
         return res.send(GeneralHelper.errorResponse(err));
     }
-}
+};
+
+const getAllUserOrder = async (req, res) => {
+    try{
+        const response = await OrderHelper.getAllUserOrder();
+        return res.status(200).json({ message: "Success get all order", data: response});
+    }catch (err) {
+        console.log(err);
+        return res.send(GeneralHelper.errorResponse(err));
+    }
+};
+
+const getAllOrder = async (req, res) => {
+    try{
+        const response = await OrderHelper.getAllOrder();
+        return res.status(200).json({ message: "Success get all order", data: response});
+    }catch (err) {
+        console.log(err);
+        return res.send(GeneralHelper.errorResponse(err));
+    }
+};
 
 
 Router.post("/create", createOrder);
+Router.get("/user", getAllUserOrder);
+Router.get("/all", getAllOrder);
 
 module.exports = Router;

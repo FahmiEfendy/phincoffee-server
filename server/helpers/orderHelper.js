@@ -1,6 +1,7 @@
 const Boom = require("boom");
 const {Product, Order, OrderGroup} = require("../../models");
 const _ = require("lodash");
+const generalHelper = require("../helpers/generalHelper");
 
 const fileName = 'server/api/orderHelper.js';
 
@@ -26,6 +27,7 @@ const createOrder = async (order) => {
                 user_id: 1,
                 product_id: productId,
                 orderGroup_id: orderGroupResponse?.id,
+                product_name: product?.name,
                 quantity: quantity,
                 price: product?.price * quantity
             };
@@ -39,6 +41,46 @@ const createOrder = async (order) => {
     }
 };
 
+
+const getAllUserOrder = async () => {
+    try{
+        const result = await OrderGroup.findAll({
+            include: [
+                {
+                    model: Order,
+                }
+            ],
+            where: { user_id: 1 },
+              
+        });
+        return Promise.resolve(result);
+    }catch (err) {
+        console.log([fileName, 'get all order', 'ERROR'], { info: `${err}` });
+        return Promise.reject(generalHelper.errorResponse(err));
+    }
+};
+
+const getAllOrder = async () => {
+    try{
+        const result = await OrderGroup.findAll({
+            include: [
+                {
+                    model: Order,
+                }
+            ],
+            where: { status: "Order Processed" },
+              
+        });
+        return Promise.resolve(result);
+    }catch (err) {
+        console.log([fileName, 'get all order', 'ERROR'], { info: `${err}` });
+        return Promise.reject(generalHelper.errorResponse(err));
+    }
+};
+
+
 module.exports = {
-    createOrder
+    createOrder,
+    getAllOrder,
+    getAllUserOrder
 }
