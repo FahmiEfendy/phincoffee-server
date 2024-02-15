@@ -39,8 +39,29 @@ const categoryIdValidation = (data) => {
   }
 };
 
+const orderValidation = (data) => {
+  const schema = Joi.object({
+    items: Joi
+      .array()
+      .items(
+        Joi.object({
+          productIds: Joi.number().required(),
+          qtys: Joi.number().required(),
+        })
+      )
+      .min(1)
+      .required(),
+    note: Joi.string().allow(""),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+}
+
 module.exports = {
   productValidation,
   categoryRequestValidation,
   categoryIdValidation,
+  orderValidation,
 };
