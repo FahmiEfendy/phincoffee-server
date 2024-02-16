@@ -1,9 +1,21 @@
 const Boom = require("boom");
 const db = require("../../models");
 const _ = require("lodash");
+const { Op } = require("sequelize");
 
-const getAllProduct = async () => {
-  const result = await db.Product.findAll();
+const getAllProduct = async (query) => {
+  const result = await db.Product.findAll({
+    include: [
+      {
+        model: db.Categories,
+        as: "category",
+        attributes: ["name"],
+        where: query.category
+          ? { name: { [Op.like]: `%${query.category}%` } }
+          : {},
+      },
+    ],
+  });
 
   if (_.isEmpty(result)) {
     return Promise.reject(Boom.notFound("Product Not Found"));

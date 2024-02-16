@@ -12,12 +12,14 @@ const Boom = require("boom");
 
 const getAllProduct = async (req, res) => {
   try {
-    const data = await ProductHelper.getAllProduct(req.body);
+    const data = await ProductHelper.getAllProduct(req.query);
 
     return res.status(200).json({ message: "Successfully get data", data });
   } catch (err) {
     console.log(err);
-    return res.send(GeneralHelper.errorResponse(err));
+    return res
+      .status(GeneralHelper.statusResponse(err))
+      .send(GeneralHelper.errorResponse(err));
   }
 };
 
