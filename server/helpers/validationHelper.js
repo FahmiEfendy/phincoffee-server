@@ -73,10 +73,43 @@ const categoryIdValidation = (data) => {
   }
 };
 
+const orderValidation = (data) => {
+  const schema = Joi.object({
+    items: Joi
+      .array()
+      .items(
+        Joi.object({
+          productIds: Joi.number().required(),
+          qtys: Joi.number().required(),
+        })
+      )
+      .min(1)
+      .required(),
+    note: Joi.string().allow(""),
+    total_price: Joi.number().required(),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
+const orderIdValidation = (data) => {
+  const schema = Joi.object({
+    id: Joi.string().required().description("Category id, i.e. milk-coffee"),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
 module.exports = {
   registerValidation,
   loginValidation,
   productValidation,
   categoryRequestValidation,
   categoryIdValidation,
+  orderValidation,
+  orderIdValidation,
 };
