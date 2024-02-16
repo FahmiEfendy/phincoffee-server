@@ -1,7 +1,9 @@
 const _ = require("lodash");
+const path = require("path");
 const request = require("supertest");
 
 const db = require("../../models");
+const cloudinary = require("../../utils/cloudinary");
 const categoryApi = require("../../server/api/category");
 const generalHelper = require("../../server/helpers/generalHelper");
 const categoryListData = require("./fixtures/database/categoryListData.json");
@@ -10,21 +12,33 @@ const categoryDetailData = require("./fixtures/database/categoryDetailData.json"
 let server;
 let apiUrl;
 
-let mockAllCategory;
-let getAllCategory;
-let mockCategoryDetail;
-let getCategoryDetail;
-
 let id;
+let header;
 let payload;
+let imagePath;
+
+let mockAllCategory;
+let mockCategoryDetail;
+let mockUploadToCloudinary;
+
+let getAllCategory;
+let getCategoryDetail;
 let postCreateCategory;
 let patchUpdateCategory;
 let deleteCategory;
 
 describe("Category", () => {
   beforeAll(() => {
-    server = generalHelper.createTestServer("/category", categoryApi);
     apiUrl = "/category";
+
+    server = generalHelper.createTestServer("/category", categoryApi);
+
+    mockUploadToCloudinary = jest.spyOn(cloudinary, "uploadToCloudinary");
+
+    header = {
+      authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJmYWhtaSIsImVtYWlsIjoiZmFobWlAZ21haWwuY29tIiwiaWF0IjoxNzA4MDUwNzAyLCJleHAiOjE3MDgxMzcxMDJ9.WV0EPcBk87SFQyXJIEHGeTJfrBKzsxZDruY8Tm4rrsk",
+    };
   });
 
   afterAll(async () => {
@@ -93,46 +107,42 @@ describe("Category", () => {
 
   describe("POST Create Category", () => {
     beforeEach(() => {
+      imagePath = path.join(__dirname, "dessert.jpg");
       payload = {
-        name: "Cake",
-        description: "Delicious cake with affordable price",
-        image: [
-          {
-            fieldname: "image",
-            originalname: "placeholder.jpg",
-            encoding: "7bit",
-            mimetype: "image/jpeg",
-            buffer: Buffer.from([]),
-            size: 0,
-          },
-        ],
+        name: "Dessert",
+        description: "Indulge in sweet treats and delightful desserts",
       };
 
       getCategoryDetail = jest.spyOn(db.Categories, "findOne");
       postCreateCategory = jest.spyOn(db.Categories, "create");
     });
 
-    // TODO: Fix Image Undefined
-    // test("Should Return 201: POST Create Category Success", async () => {
-    //   postCreateCategory.mockResolvedValue("Success");
+    test("Should Return 201: POST Create Category Success", async () => {
+      postCreateCategory.mockResolvedValue("Success");
+      mockUploadToCloudinary.mockResolvedValue({
+        url: "/example-url/image.jpg",
+      });
 
-    //   await request(server)
-    //     .post(`${apiUrl}/create`)
-    //     .send(payload)
-    //     // .expect(201)
-    //     .then((res) => {
-    //       console.log(res.body);
-    //       expect(res.body.data).toBeTruthy();
-    //     });
-    // });
+      await request(server)
+        .post(`${apiUrl}/create`)
+        .set(header)
+        .field("name", payload.name)
+        .field("description", payload.description)
+        .attach("image", imagePath)
+        .expect(201)
+        .then((res) => expect(res.body.data).toBeTruthy());
+    });
 
     test("Should Return 400: POST Create Category Failed, Category Exist", async () => {
-      getCategoryDetail.mockResolvedValue({ name: "Coffee" });
+      getCategoryDetail.mockResolvedValue({ name: "Dessert" });
       postCreateCategory.mockResolvedValue("Success");
 
       await request(server)
         .post(`${apiUrl}/create`)
-        .send(payload)
+        .set(header)
+        .field("name", payload.name)
+        .field("description", payload.description)
+        .attach("image", imagePath)
         .expect(400)
         .then((res) => expect(res.body.error).toBe("Bad Request"));
     });
@@ -142,16 +152,29 @@ describe("Category", () => {
 
       await request(server)
         .post(`${apiUrl}/create`)
+        .set(header)
         .send({})
         .expect(400)
         .then((res) => expect(res.body.error).toBe("Bad Request"));
+    });
+
+    test("Should Return 401: Unauthorized", async () => {
+      postCreateCategory.mockResolvedValue("Success");
+
+      await request(server)
+        .post(`${apiUrl}/create`)
+        .field("name", payload.name)
+        .field("description", payload.description)
+        .attach("image", imagePath)
+        .expect(401)
+        .then((res) => expect(res.body.message).toBe("Unauthorized"));
     });
   });
 
   describe("PATCH Update Category", () => {
     beforeEach(() => {
       id = "coffee";
-
+      imagePath = path.join(__dirname, "dessert.jpg");
       payload = {
         description: "Best coffee in town",
       };
@@ -167,7 +190,9 @@ describe("Category", () => {
 
       await request(server)
         .patch(`${apiUrl}/update/${id}`)
-        .send(payload)
+        .set(header)
+        .field("description", payload.description)
+        .attach("image", imagePath)
         .expect(200)
         .then((res) =>
           expect(res.body.message).toBe("Successfully Update a Category")
@@ -181,6 +206,7 @@ describe("Category", () => {
 
       await request(server)
         .patch(`${apiUrl}/update/${id}`)
+        .set(header)
         .send(payload)
         .expect(404)
         .then((res) => expect(res.body.error).toBe("Not Found"));
@@ -191,9 +217,21 @@ describe("Category", () => {
 
       await request(server)
         .patch(`${apiUrl}/update/${id}`)
+        .set(header)
         .send({})
         .expect(400)
         .then((res) => expect(res.body.error).toBe("Bad Request"));
+    });
+
+    test("Should Return 401: Unauthorized", async () => {
+      getCategoryDetail.mockResolvedValue(mockCategoryDetail);
+      patchUpdateCategory.mockResolvedValue("Success");
+
+      await request(server)
+        .patch(`${apiUrl}/update/${id}`)
+        .send(payload)
+        .expect(401)
+        .then((res) => expect(res.body.message).toBe("Unauthorized"));
     });
   });
 
@@ -212,8 +250,8 @@ describe("Category", () => {
 
       await request(server)
         .delete(`${apiUrl}/delete/${id}`)
-        .expect(202)
-        .then((res) => console.log(res.body));
+        .set(header)
+        .expect(202);
     });
 
     test("Should Return 404: DELETE Customer Failed Because Not Found", async () => {
@@ -224,8 +262,19 @@ describe("Category", () => {
 
       await request(server)
         .delete(`${apiUrl}/delete/${id}`)
+        .set(header)
         .expect(404)
         .then((res) => expect(res.body.error).toBe("Not Found"));
+    });
+
+    test("Should Return 401: Unauthorized", async () => {
+      getCategoryDetail.mockResolvedValue(mockCategoryDetail);
+      deleteCategory.mockResolvedValue("Success");
+
+      await request(server)
+        .delete(`${apiUrl}/delete/${id}`)
+        .expect(401)
+        .then((res) => expect(res.body.message).toBe("Unauthorized"));
     });
   });
 });

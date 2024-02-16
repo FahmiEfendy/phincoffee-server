@@ -1,0 +1,32 @@
+[ 
+    {
+        "id": 1,
+        "name": "Espresso",
+        "description": "Black Coffee",
+        "price": 18000,
+        "image_url": "http://res.cloudinary.com/dfbcal2eb/image/upload/v1707977795/f7e7gpbsqqblndbvkura.png",
+        "category_id": "espresso",
+        "createdAt": "2024-02-15T17:23:49.000Z",
+        "updatedAt": "2024-02-15T17:23:49.000Z"
+    },
+    {
+        "id": 2,
+        "name": "Latte",
+        "description": "Coffee with creamer",
+        "price": 20000,
+        "image_url": "http://res.cloudinary.com/dfbcal2eb/image/upload/v1707989618/h5tgmsyxluay0mbde7cr.png",
+        "category_id": "latte",
+        "createdAt": "2024-02-15T17:23:49.000Z",
+        "updatedAt": "2024-02-15T17:23:49.000Z"
+    },
+    {
+        "id": 3,
+        "name": "Chocolate",
+        "description": "Chocolate Hot/Ice",
+        "price": 22000,
+        "image_url": "http://res.cloudinary.com/dfbcal2eb/image/upload/v1707987709/xbrzdlfizs5u3nmccbef.png",
+        "category_id": "2",
+        "createdAt": "2024-02-15T17:23:49.000Z",
+        "updatedAt": "2024-02-15T17:23:49.000Z"
+    }
+]
