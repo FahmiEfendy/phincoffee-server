@@ -3,6 +3,7 @@ const Router = require("express").Router();
 const uploadMedia = require("../middlewares/uploadMedia");
 const generalHelper = require("../helpers/generalHelper");
 const categoryHelper = require("../helpers/categoryHelper");
+const authMiddleware = require("../middlewares/authMiddleware");
 const validationHelper = require("../helpers/validationHelper");
 
 const createCategory = async (req, res) => {
@@ -99,6 +100,7 @@ const deleteCategory = async (req, res) => {
 Router.post(
   "/create",
   uploadMedia.fields([{ name: "image", maxCount: 1 }]),
+  authMiddleware.validateToken,
   createCategory
 );
 Router.get("/list", categoryList);
@@ -106,8 +108,9 @@ Router.get("/detail/:id", categoryDetail);
 Router.patch(
   "/update/:id",
   uploadMedia.fields([{ name: "image", maxCount: 1 }]),
+  authMiddleware.validateToken,
   updateCategory
 );
-Router.delete("/delete/:id", deleteCategory);
+Router.delete("/delete/:id", authMiddleware.validateToken, deleteCategory);
 
 module.exports = Router;
