@@ -12,8 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      //belongs to user 
-
+      OrderGroup.belongsTo(models.User, {
+        foreignKey: {
+          name: 'user_id',
+        }
+      });
       
       OrderGroup.hasMany(models.Order, {
         foreignKey: {
@@ -21,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: "CASCADE",
       });
-
 
     }
   }
