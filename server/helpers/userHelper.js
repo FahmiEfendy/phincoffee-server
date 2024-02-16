@@ -45,6 +45,8 @@ exports.getUserDetail = async (id) => {
 
 exports.update = async (id, data) => {
   try {
+    await getUserDetail(id);
+
     const { username, email, role } = data;
     const result = await db.User.update(
       { username, email, role },

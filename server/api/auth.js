@@ -9,11 +9,16 @@ const fileName = "server/api/auth.js";
 
 const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
     Validation.registerValidation(req.body);
 
-    const response = await AuthHelper.register({ username, email, password });
+    const response = await AuthHelper.register({
+      username,
+      email,
+      password,
+      role,
+    });
 
     return res.send(response);
   } catch (err) {

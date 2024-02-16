@@ -10,6 +10,7 @@ const registerValidation = (data) => {
       .max(20)
       .required()
       .description("Should be between 8-20 characters"),
+    role: Joi.string().required().description("Cannot be empty"),
   });
 
   if (schema.validate(data).error) {
@@ -61,6 +62,17 @@ const loginValidation = (data) => {
   }
 };
 
+const profileValidation = (data) => {
+  const schema = Joi.object({
+    username: Joi.string().required().description("Person's username"),
+    email: Joi.string().required().description("Active email"),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
 const categoryIdValidation = (data) => {
   const schema = Joi.object({
     id: Joi.string().required().description("Category id, i.e. milk-coffee"),
@@ -74,6 +86,7 @@ const categoryIdValidation = (data) => {
 module.exports = {
   registerValidation,
   loginValidation,
+  profileValidation,
   productValidation,
   categoryRequestValidation,
   categoryIdValidation,
