@@ -83,6 +83,7 @@ const orderValidation = (data) => {
       .min(1)
       .required(),
     note: Joi.string().allow(""),
+    total_price: Joi.number().required(),
   });
 
   if (schema.validate(data).error) {

@@ -6,15 +6,16 @@ const order = require("../../models/order");
 
 const fileName = 'server/api/orderHelper.js';
 
-const createOrder = async (order) => {
+const createOrder = async (order, idUser) => {
     try{    
         const productIds = order.items.map((item) => item.productIds);
         const quantities = order.items.map((item) => item.qtys);
 
         const orderGroupData = {
-            user_id: 1,
+            user_id: idUser,
             status: "Order Processed",
-            note: order.note
+            note: order.note,
+            total_price: order.total_price
         }
 
         const orderGroupResponse = await OrderGroup.create(orderGroupData);
@@ -25,7 +26,7 @@ const createOrder = async (order) => {
 
             const product = await Product.findOne({where: {id: productId}});
             const orderData = {
-                user_id: 1,
+                user_id: idUser,
                 product_id: productId,
                 orderGroup_id: orderGroupResponse?.id,
                 product_name: product?.name,
@@ -43,7 +44,7 @@ const createOrder = async (order) => {
 };
 
 
-const getAllUserOrder = async () => {
+const getAllUserOrder = async (idUser) => {
     try{
         const result = await OrderGroup.findAll({
             include: [
@@ -51,7 +52,7 @@ const getAllUserOrder = async () => {
                     model: Order,
                 }
             ],
-            where: { user_id: 1 },
+            where: { user_id: idUser },
               
         });
         return Promise.resolve(result);

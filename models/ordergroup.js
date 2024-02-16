@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
   OrderGroup.init({
     user_id: DataTypes.INTEGER,
     status: DataTypes.STRING,
-    note: DataTypes.STRING
+    note: DataTypes.STRING,
+    total_price: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'OrderGroup',

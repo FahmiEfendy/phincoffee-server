@@ -27,7 +27,7 @@ const validateToken = (req, res, next) => {
     if (isTokenExpired) {
       throw Boom.unauthorized();
     }
-
+    req.userId = verifiedUser.id;
     return next();
   } catch (err) {
     console.log([fileName, "validateToken", "ERROR"], { info: `${err}` });

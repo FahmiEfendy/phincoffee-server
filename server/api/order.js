@@ -4,13 +4,15 @@ const Validation = require("../helpers/validationHelper");
 const OrderHelper = require("../helpers/orderHelper");
 const GeneralHelper = require("../helpers/generalHelper");
 const Boom = require("boom");
+const jwt = require("jsonwebtoken");
+const Middleware = require("../middlewares/authMiddleware");
 
 const createOrder = async (req, res) => {
     try{
         const newData = req?.body;
         Validation.orderValidation(newData);
         
-        await OrderHelper.createOrder(newData);
+        await OrderHelper.createOrder(newData, req.userId);
 
         return res.status(201).json({ message: "Order created"});
     }catch (err) {
@@ -21,7 +23,7 @@ const createOrder = async (req, res) => {
 
 const getAllUserOrder = async (req, res) => {
     try{
-        const response = await OrderHelper.getAllUserOrder();
+        const response = await OrderHelper.getAllUserOrder(req.userId);
         return res.status(200).json({ message: "Success get all order", data: response});
     }catch (err) {
         console.log(err);
@@ -57,8 +59,8 @@ const updateStatusOrder = async (req, res) => {
 }
 
 
-Router.post("/create", createOrder);
-Router.get("/user", getAllUserOrder);
+Router.post("/create",Middleware.validateToken, createOrder);
+Router.get("/user", Middleware.validateToken, getAllUserOrder);
 Router.get("/all", getAllOrder);
 Router.patch("/update", updateStatusOrder);
 
