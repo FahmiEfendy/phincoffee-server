@@ -1,5 +1,6 @@
 const Router = require("express").Router();
 
+const Validation = require("../helpers/validationHelper");
 const UserHelper = require("../helpers/userHelper");
 const GeneralHelper = require("../helpers/generalHelper");
 
@@ -26,7 +27,7 @@ const userDetail = async (req, res) => {
     const { id } = req.params;
     const response = await UserHelper.getUserDetail(id);
 
-    if (!response.ok) {
+    if (!response) {
       return res.status(404).json(response);
     }
 
@@ -39,6 +40,8 @@ const userDetail = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
+    Validation.profileValidation(req.body);
+
     const { id } = req.params;
     const data = req.body;
     const response = await UserHelper.update(id, data);
