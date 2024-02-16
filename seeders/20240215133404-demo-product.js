@@ -12,7 +12,7 @@ module.exports = {
           price: 18000,
           image_url:
             "http://res.cloudinary.com/dfbcal2eb/image/upload/v1707977795/f7e7gpbsqqblndbvkura.png",
-          category_id: 1,
+          category_id: "espresso",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -22,7 +22,7 @@ module.exports = {
           price: 20000,
           image_url:
             "http://res.cloudinary.com/dfbcal2eb/image/upload/v1707989618/h5tgmsyxluay0mbde7cr.png",
-          category_id: 1,
+          category_id: "latte",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

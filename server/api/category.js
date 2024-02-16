@@ -1,5 +1,6 @@
 const Router = require("express").Router();
 
+const uploadMedia = require("../middlewares/uploadMedia");
 const generalHelper = require("../helpers/generalHelper");
 const categoryHelper = require("../helpers/categoryHelper");
 const validationHelper = require("../helpers/validationHelper");
@@ -9,6 +10,7 @@ const createCategory = async (req, res) => {
     const objectData = {
       name: req.body.name,
       description: req.body.description,
+      image: req?.files?.image,
     };
 
     validationHelper.categoryRequestValidation(objectData);
@@ -59,6 +61,7 @@ const updateCategory = async (req, res) => {
   try {
     const objectData = {
       description: req.body.description,
+      image: req?.files?.image,
     };
 
     validationHelper.categoryIdValidation(req.params);
@@ -93,10 +96,18 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-Router.post("/create", createCategory);
+Router.post(
+  "/create",
+  uploadMedia.fields([{ name: "image", maxCount: 1 }]),
+  createCategory
+);
 Router.get("/list", categoryList);
 Router.get("/detail/:id", categoryDetail);
-Router.patch("/update/:id", updateCategory);
+Router.patch(
+  "/update/:id",
+  uploadMedia.fields([{ name: "image", maxCount: 1 }]),
+  updateCategory
+);
 Router.delete("/delete/:id", deleteCategory);
 
 module.exports = Router;

@@ -38,6 +38,9 @@ const categoryRequestValidation = (data, isUpdate = false) => {
     description: Joi.string()
       .required()
       .description("Category description, Various coffee beverages"),
+    image: isUpdate
+      ? Joi.array().optional().description("Category images")
+      : Joi.array().required().description("Category images"),
   });
 
   if (schema.validate(data).error) {

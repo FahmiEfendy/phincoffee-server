@@ -4,11 +4,16 @@ const { Op } = require("sequelize");
 
 const db = require("../../models");
 const generalHelper = require("../helpers/generalHelper");
+const {
+  uploadToCloudinary,
+  cloudinaryDeleteImg,
+} = require("../../utils/cloudinary");
 
 const fileName = "server/helpers/categoryHelper.js";
 
 const postCreateCategory = async (objectData) => {
-  const { name, description } = objectData;
+  const { name, description, image } = objectData;
+  let imageResult;
 
   try {
     // TODO: Validation Only Admin Can Create Category
@@ -23,10 +28,18 @@ const postCreateCategory = async (objectData) => {
       throw Boom.badRequest(`Category ${name} already exist!`);
     }
 
+    imageResult = await uploadToCloudinary(image[0], "image", "image/icons");
+
+    if (!imageResult?.url) {
+      throw Boom.badImplementation(imageResult.error);
+    }
+
     const newCategory = db.Categories.build({
       id,
       name,
       description,
+      image_url: imageResult?.url,
+      image_id: imageResult?.public_id,
     });
 
     await newCategory.save();
@@ -35,6 +48,10 @@ const postCreateCategory = async (objectData) => {
 
     return Promise.resolve(newCategory);
   } catch (err) {
+    if (imageResult?.public_id) {
+      await cloudinaryDeleteImg(imageResult?.public_id, "image");
+    }
+
     console.log([fileName, "POST Create Cateogory", "ERROR"], {
       message: { info: `${err}` },
     });
@@ -45,13 +62,14 @@ const postCreateCategory = async (objectData) => {
 
 const getCategoryList = async (query) => {
   try {
-    const data = await db.Categories.findAll(
-      query.name
-        ? {
-            where: { name: { [Op.like]: `%${query.name}%` } },
-          }
-        : {}
-    );
+    const data = await db.Categories.findAll({
+      where: query.name ? { name: { [Op.like]: `%${query.name}%` } } : {},
+      include: {
+        model: db.Product,
+        as: "products",
+        attributes: ["name", "price"],
+      },
+    });
 
     if (query?.name && _.isEmpty(data)) {
       throw Boom.notFound(`Cannot find category with query of ${query.name}`);
@@ -96,7 +114,8 @@ const getCategoryDetail = async (params) => {
 };
 
 const patchUpdateCategory = async (params, objectData) => {
-  const { description } = objectData;
+  const { description, image } = objectData;
+  let imageResult;
 
   try {
     // TODO: Validation Only Admin Can Update Category
@@ -109,7 +128,26 @@ const patchUpdateCategory = async (params, objectData) => {
       throw Boom.notFound(`Cannot find category with id of ${params.id}`);
     }
 
-    await db.Categories.update({ description }, { where: { id: params.id } });
+    if (image) {
+      imageResult = await uploadToCloudinary(image[0], "image", "image/icons");
+
+      if (!imageResult?.url) {
+        throw Boom.badImplementation(imageResult.error);
+      }
+
+      await cloudinaryDeleteImg(selectedCategory?.image_id, "image");
+    }
+
+    await db.Categories.update(
+      image
+        ? {
+            description,
+            image_url: imageResult?.url,
+            image_id: imageResult?.public_id,
+          }
+        : { description },
+      { where: { id: params.id } }
+    );
 
     const updatedCategory = await db.Categories.findOne({
       where: { id: params.id },
@@ -139,7 +177,10 @@ const deleteCategory = async (params) => {
       throw Boom.notFound(`Cannot find category with id of ${params.id}`);
     }
 
-    await db.Categories.destroy({ where: { id: params.id } });
+    await db.sequelize.transaction(async (t) => {
+      await cloudinaryDeleteImg(selectedCategory?.image_id, "image");
+      await db.Categories.destroy({ where: { id: params.id }, transaction: t });
+    });
 
     console.log([fileName, "DELETE Category ", "INFO"]);
 
