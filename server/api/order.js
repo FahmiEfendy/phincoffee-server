@@ -61,7 +61,7 @@ const updateStatusOrder = async (req, res) => {
 
 Router.post("/create",Middleware.validateToken, createOrder);
 Router.get("/user", Middleware.validateToken, getAllUserOrder);
-Router.get("/all", getAllOrder);
-Router.patch("/update", updateStatusOrder);
+Router.get("/all", Middleware.validateToken, getAllOrder);
+Router.patch("/update", Middleware.validateToken, updateStatusOrder);
 
 module.exports = Router;
