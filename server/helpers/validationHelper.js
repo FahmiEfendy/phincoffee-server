@@ -96,13 +96,46 @@ const orderValidation = (data) => {
 
 const orderIdValidation = (data) => {
   const schema = Joi.object({
-    id: Joi.string().required().description("Category id, i.e. milk-coffee"),
+    id: Joi.string().required().description("milk-coffee"),
   });
 
   if (schema.validate(data).error) {
     throw Boom.badRequest(schema.validate(data).error);
   }
 };
+
+const addCartValidation = (data) => {
+  const schema = Joi.object({
+    product_id: Joi.number().required(),
+    quantity: Joi.number().required()
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
+const updateCartValidation = (data) => {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+    quantity: Joi.number().required()
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
+const cartIdValidation = (data) => {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
+
 
 module.exports = {
   registerValidation,
@@ -112,4 +145,7 @@ module.exports = {
   categoryIdValidation,
   orderValidation,
   orderIdValidation,
+  addCartValidation,
+  updateCartValidation,
+  cartIdValidation
 };

@@ -8,6 +8,8 @@ const User = require("./server/api/user");
 const category = require("./server/api/category");
 const productRoute = require("./server/api/product");
 const orderRoute = require("./server/api/order");
+const cartRoute = require("./server/api/cart");
+
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ app.use("/api", User);
 app.use("/api/product", productRoute);
 app.use("/api/category/", category);
 app.use("/api/order/", orderRoute);
+app.use("/api/cart", cartRoute);
 
 app.get("/api", (req, res) => {
   res.send("Hello!");
