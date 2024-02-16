@@ -2,6 +2,7 @@ const Boom = require("boom");
 const {Product, Order, OrderGroup} = require("../../models");
 const _ = require("lodash");
 const generalHelper = require("../helpers/generalHelper");
+const order = require("../../models/order");
 
 const fileName = 'server/api/orderHelper.js';
 
@@ -78,9 +79,30 @@ const getAllOrder = async () => {
     }
 };
 
+const updateStatusOrder = async (id) => {
+    try{
+        const orderGroup = await OrderGroup.findOne({where: {id}})
+        
+        if (_.isEmpty(orderGroup)) {
+            return Promise.reject(Boom.notFound("order not found"));
+        }
+
+        await orderGroup.update({status: "Pick Up"});
+
+        const updatedOrder = await OrderGroup.findOne({where: {id}});
+
+        return Promise.resolve(updatedOrder);
+
+    }catch (err) {
+        console.log([fileName, 'update status order', 'ERROR'], { info: `${err}` });
+        return Promise.reject(generalHelper.errorResponse(err));
+    }
+};
+
 
 module.exports = {
     createOrder,
     getAllOrder,
-    getAllUserOrder
+    getAllUserOrder,
+    updateStatusOrder,
 }

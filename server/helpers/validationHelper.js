@@ -57,11 +57,22 @@ const orderValidation = (data) => {
   if (schema.validate(data).error) {
     throw Boom.badRequest(schema.validate(data).error);
   }
-}
+};
+
+const orderIdValidation = (data) => {
+  const schema = Joi.object({
+    id: Joi.string().required().description("Category id, i.e. milk-coffee"),
+  });
+
+  if (schema.validate(data).error) {
+    throw Boom.badRequest(schema.validate(data).error);
+  }
+};
 
 module.exports = {
   productValidation,
   categoryRequestValidation,
   categoryIdValidation,
   orderValidation,
+  orderIdValidation,
 };

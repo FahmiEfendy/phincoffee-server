@@ -39,9 +39,27 @@ const getAllOrder = async (req, res) => {
     }
 };
 
+const updateStatusOrder = async (req, res) => {
+    try {
+        const dataId = req.body;
+
+        Validation.orderIdValidation(dataId);
+
+        const response = await OrderHelper.updateStatusOrder(dataId?.id);
+      
+        res
+        .status(200)
+        .send({ message: "Successfully Update a Order status", data: response });
+    }catch (err) {
+        console.log(err);
+        return res.send(GeneralHelper.errorResponse(err));
+    }
+}
+
 
 Router.post("/create", createOrder);
 Router.get("/user", getAllUserOrder);
 Router.get("/all", getAllOrder);
+Router.patch("/update", updateStatusOrder);
 
 module.exports = Router;
