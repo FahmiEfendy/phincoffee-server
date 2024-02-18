@@ -1,0 +1,365 @@
+{
+	"info": {
+		"_postman_id": "5abca55d-78c0-40a7-8c77-472c371416d2",
+		"name": "Phincoffee",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21039946",
+		"_collection_link": "https://dark-desert-809532.postman.co/workspace/Team-Workspace~309ecf32-1078-4efa-8718-3797ad989a5e/collection/21039946-5abca55d-78c0-40a7-8c77-472c371416d2?action=share&source=collection_link&creator=21039946"
+	},
+	"item": [
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "[POST] Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\" : [\n        {\n            \"productIds\" : 1,\n            \"qtys\": 2\n        },\n        {\n            \"productIds\" : 2,\n            \"qtys\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/api/order/create"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "[POST] Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{BACKEND_URL}}/login"
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Sukigi",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "sukigi@mail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "passwd123",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{BACKEND_URL}}/register"
+					},
+					"response": []
+				},
+				{
+					"name": "[PATCH] Change Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "{{BACKEND_URL}}/change-password"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "[POST] Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Latte 2\",\r\n    \"description\": \"coffee with creamer\",\r\n    \"price\": 30000,\r\n    \"image_url\": \"asdasdad\",\r\n    \"category_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BACKEND_URL}}/product/create/"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Get All Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BACKEND_URL}}/product/"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Get Product By Id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "[PUT] Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Americano\",\r\n    \"description\": \"asdasd\",\r\n    \"price\": 25000,\r\n    \"image_url\": \"asdasdasd\",\r\n    \"category_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{BACKEND_URL}}/product/update/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[DELETE] Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{BACKEND_URL}}/product/delete/4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "[POST] Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Dessert",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Indulge in sweet treats and delightful desserts",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ASUS/Desktop/icons/dessert.jpg"
+								}
+							]
+						},
+						"url": "{{BACKEND_URL}}/category/create"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Category List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BACKEND_URL}}/category/list",
+							"host": [
+								"{{BACKEND_URL}}"
+							],
+							"path": [
+								"category",
+								"list"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "mi",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Category Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BACKEND_URL}}/category/detail/coffee"
+					},
+					"response": []
+				},
+				{
+					"name": "[PATCH] Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Delightful coffee",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ASUS/Desktop/images.jpg"
+								}
+							]
+						},
+						"url": "{{BACKEND_URL}}/category/update/coffee"
+					},
+					"response": []
+				},
+				{
+					"name": "[DELETE]  Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{BACKEND_URL}}/category/delete/coffee"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "[GET] User List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BACKEND_URL}}/user"
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] User Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{BACKEND_URL}}/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[PATCH] Update Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Jhondoe",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "broron@mail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": "{{BACKEND_URL}}/user/4"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[GET] Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{BACKEND_URL}}/"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJmYWhtaSIsImVtYWlsIjoiZmFobWlAZ21haWwuY29tIiwiaWF0IjoxNzA4MDUwNzAyLCJleHAiOjE3MDgxMzcxMDJ9.WV0EPcBk87SFQyXJIEHGeTJfrBKzsxZDruY8Tm4rrsk"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BACKEND_URL",
+			"value": "http://localhost:5000/api",
+			"type": "string"
+		}
+	]
+}
